@@ -72,19 +72,46 @@ func (t *TaskMaster) GetAllTasks() []Task {
 	defer t.Unlock()
 
 	allTasks := make([]Task, 0, len(t.tasks))
-	for task := range t.tasks {
+	for _, task := range t.tasks {
 		allTasks = append(allTasks, task)
 	}
+
+	return allTasks
 }
 
 func (t *TaskMaster) GetTaskByTag(tag string) []Task {
-	//TODO implement me
-	panic("implement me")
+	t.Lock()
+	defer t.Unlock()
+
+	var tasks []Task
+
+taskloop:
+	for _, task := range t.tasks {
+		for _, taskTag := range task.Tags {
+			if taskTag == tag {
+				tasks = append(tasks, task)
+				continue taskloop
+			}
+		}
+	}
+
+	return tasks
 }
 
 func (t *TaskMaster) GetTaskByDueDate(year int, month time.Month, day int) []Task {
-	//TODO implement me
-	panic("implement me")
+	t.Lock()
+	defer t.Unlock()
+
+	var tasks []Task
+
+	for _, task := range t.tasks {
+		y, m, d := task.Due.Date()
+		if y == year && m == month && d == day {
+			tasks = append(tasks, task)
+		}
+	}
+
+	return tasks
 }
 
 func New() *TaskMaster {
