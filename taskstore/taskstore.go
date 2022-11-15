@@ -102,7 +102,6 @@ func (ts *TaskStore) GetTasksByTag(tag string) []Task {
 	defer ts.Unlock()
 
 	var tasks []Task
-
 taskloop:
 	for _, task := range ts.tasks {
 		for _, taskTag := range task.Tags {
