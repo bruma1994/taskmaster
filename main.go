@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -22,16 +21,6 @@ type taskServer struct {
 func newTaskServer() *taskServer {
 	store := taskstore.New()
 	return &taskServer{store: store}
-}
-
-func renderJSON(w http.ResponseWriter, v interface{}) {
-	js, err := json.Marshal(v)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
 }
 
 func (ts *taskServer) createTaskHandler(c *gin.Context) {
